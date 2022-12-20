@@ -126,8 +126,10 @@ bool doClientWork(struct client* c){
 			}
 		}
 		else if (c -> procPhase == 2){
-			fputc(chr, c -> target);
-			fflush(c -> target);
+			if (chr != EOF){ // On some systems non-blocking sockets merely spew EOFs. I dunno?
+				fputc(chr, c -> target);
+				fflush(c -> target);
+			}
 		}
 	}
 	return false;
