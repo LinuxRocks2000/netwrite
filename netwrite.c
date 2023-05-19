@@ -63,16 +63,21 @@ int main(int argc, char** argv){
 	hints.ai_flags = AI_NUMERICSERV | AI_CANONNAME;
 	if (getaddrinfo(domain, "6780", &hints, &info) != 0){
 		perror("getaddrinfo failed");
+		return 1;
 	}
 	int sock = 0;
 	struct addrinfo* rp;
 	char ipstr [INET_ADDRSTRLEN];
+	if (info == NULL){
+		printf("No address found\n");
+		return 1;
+	}
 	for (rp = info; rp != NULL; rp = rp -> ai_next){ // THANKS, man getaddrinfo(3)
-	struct in_addr  *addr;  
-	        /*struct sockaddr_in *ipv = (struct sockaddr_in *)rp->ai_addr; 
+		struct in_addr  *addr;  
+	        struct sockaddr_in *ipv = (struct sockaddr_in *)rp->ai_addr; 
         	addr = &(ipv->sin_addr);
         	inet_ntop(rp->ai_family, addr, ipstr, sizeof ipstr); 
-		printf("Got address %s\n", ipstr);*/
+		printf("Got address %s\n", ipstr);
 		sock = socket(rp -> ai_family, rp -> ai_socktype, rp -> ai_protocol);
 		if (sock == -1){
 			printf("Failed to create socket\n");
